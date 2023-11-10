@@ -1,50 +1,51 @@
 #include <cstdlib>
 #include <iostream>
 #include <chrono>
-#include "defs.h"
+#include "Board.h"
 using namespace std;
 using namespace std::chrono;
-class Player
+bool inBounds(int x, int y) {
+  return x >= 0 && y >= 0 && x < BOARD_W && y < BOARD_H;
+}
+Player::Player(int id) 
 {
-
-public: 
-    int x;
-    int y;
-    int lastMoveTime = 0;
-    int moveDelayMs = 100;
-    int id = -1;
-
-
-Player(int id) 
-{
-    x = (rand() % BOARD_W);
-    y = (rand() % BOARD_H);
-    this->id = id;
-    map[y][x] = id;
+  x = (rand() % BOARD_W);
+  y = (rand() % BOARD_H);
+  this->id = id;
+  map[y][x] = this;
 }
 
-void move(Direction dir) {
-    #ifdef AVR_UNO
-        long long currT = millis();
-    #else
-        long long currT = duration_cast< milliseconds >(
-            system_clock::now().time_since_epoch()
-        ).count();
-    #endif
+bool Player::move(Direction dir, bool checkDelay) {
+  if (checkDelay) {
+  #ifdef AVR_UNO
+    long long currT = millis();
+  #else
+    long long currT = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+  #endif
     if (currT < lastMoveTime + moveDelayMs) {
-        return;
+      return false;
     }
     lastMoveTime = currT;
-    Point vec = MOVE_VECS[dir];
-    int newX = x + vec.x;
-    int newY = y + vec.y;
-    inBounds(newX, newY);
-    if (map[newY][newX] != -1) {
-
-        map[y][x] = -1;
-        x = newX;
-        y = newY;
-        map[y][x] = id;
+  }
+  Point vec = MOVE_VECS[dir];
+  int newX = x + vec.x;
+  int newY = y + vec.y;
+  if (!inBounds(newX, newY)) {
+    return false;
+  }
+  if (!holds_alternative<monostate>(map[newY][newX])) {
+    if (holds_alternative<Player*>(map[newY][newX])) {
+      // if it's a player, we can try and push the player
+      if (!get<Player*>(map[newY][newX])->move(dir)) {
+        return false;
+      }
+    } else {
+      return false;
     }
+  }
+  map[y][x] = monostate{};
+  x = newX;
+  y = newY;
+  map[y][x] = this;
+  return true;
 }
-};

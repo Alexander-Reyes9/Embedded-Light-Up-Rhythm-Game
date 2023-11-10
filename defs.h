@@ -4,9 +4,7 @@
 
 enum Direction { LEFT, RIGHT, UP, DOWN };
 struct Point {
-    int x;
-    int y;
+  int x;
+  int y;
 };
-Point MOVE_VECS[] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-
-int map [BOARD_H][BOARD_W];
+const Point MOVE_VECS[] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
