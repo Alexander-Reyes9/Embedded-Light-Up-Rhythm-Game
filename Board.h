@@ -4,3 +4,6 @@
 #include "Player.h"
 typedef std::variant<Player*, std::monostate> BoardElement;
 extern std::vector<std::vector<BoardElement>> map;
+
+void setupLEDs();
+void displayMap();

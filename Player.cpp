@@ -7,11 +7,12 @@ using namespace std::chrono;
 bool inBounds(int x, int y) {
   return x >= 0 && y >= 0 && x < BOARD_W && y < BOARD_H;
 }
-Player::Player(int id) 
+Player::Player(int id, CRGB color) 
 {
   x = (rand() % BOARD_W);
   y = (rand() % BOARD_H);
   this->id = id;
+  this->color = color;
   map[y][x] = this;
 }
 

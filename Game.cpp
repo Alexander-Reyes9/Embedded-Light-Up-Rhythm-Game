@@ -1,23 +1,19 @@
+#ifndef AVR_UNO
 #include <iostream>
-#include "Board.h"
 #include <string>
+#endif
+#include "Board.h"
 using namespace std;
-
-std::vector<std::vector<BoardElement>> map(BOARD_H, std::vector<BoardElement>(BOARD_W, std::monostate{}));
-
-void initMap() {
-  /*for (int i = 0; i < BOARD_H; ++i)
-    for (int j = 0; j < BOARD_W; ++j)
-      map[i][j]= monostate();*/
-}
 
 int main ()
 {
-  initMap();
-  Player players[2] = {0, 1};
+  Player players[2] = {{0, CRGB::Red}, {1, CRGB::Blue}};
+#ifdef AVR_UNO
+  setupLEDs();
+#elif
   string input = "";
-  cin >> input;
-  
+  cin >> input;  
+
   while (input != "done")
   {
     int playerSelect = stoi(input);
@@ -46,13 +42,9 @@ int main ()
       cout << '\t' << players[i].x << endl;
       cout << '\t' << players[i].y << endl;
     }*/
-    for (int i = 0; i < BOARD_H; ++i) {
-      for (int j = 0; j < BOARD_W; ++j) {
-        cout << (char)(holds_alternative<monostate>(map[i][j]) ? '-' : (std::get<Player*>(map[i][j])->id + '0'));
-      }
-      cout << endl;
-    }
+    displayMap();
     cin >> input;
   }
+#endif
   return 0;
 }
