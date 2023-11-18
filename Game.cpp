@@ -1,4 +1,4 @@
-#ifndef AVR_UNO
+#ifndef ARDUINO_AVR_UNO
 #include <iostream>
 #include <string>
 #endif
@@ -7,10 +7,10 @@ using namespace std;
 
 int main ()
 {
-  Player players[2] = {{0, CRGB::Red}, {1, CRGB::Blue}};
-#ifdef AVR_UNO
+  Player players[2] = {0, 1};
+#ifdef ARDUINO_AVR_UNO
   setupLEDs();
-#elif
+#else
   string input = "";
   cin >> input;  
 

@@ -1,9 +1,17 @@
 #pragma once
-#include <variant>
-#include <vector>
 #include "Player.h"
-typedef std::variant<Player*, std::monostate> BoardElement;
-extern std::vector<std::vector<BoardElement>> map;
+
+struct Empty {};
+
+typedef Player* PPlayer;
+
+struct BoardElement {
+  enum {Player, Empty} type = Empty;
+  union Value {
+    PPlayer as_player;
+  } value;
+};
+extern BoardElement board[BOARD_H][BOARD_W];
 
 void setupLEDs();
 void displayMap();
