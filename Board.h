@@ -13,5 +13,5 @@ struct BoardElement {
 };
 extern BoardElement board[BOARD_H][BOARD_W];
 
-void setupLEDs();
+void setupBoard();
 void displayMap();

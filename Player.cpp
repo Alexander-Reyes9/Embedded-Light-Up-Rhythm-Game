@@ -1,3 +1,4 @@
+
 #ifndef ARDUINO_AVR_UNO
 #include <cstdlib>
 #include <iostream>
@@ -14,8 +15,8 @@ bool inBounds(int x, int y) {
 Player::Player(int id) 
 {
 #ifdef ARDUINO_AVR_UNO
-  x = random(0, BOARD_W);
-  y = random(0, BOARD_H);
+  x = random(BOARD_W);
+  y = random(BOARD_H);
 #else
   x = (rand() % BOARD_W);
   y = (rand() % BOARD_H);
@@ -28,7 +29,9 @@ Player::Player(int id)
 bool Player::move(Direction dir, bool checkDelay) {
   if (checkDelay) {
   #ifdef ARDUINO_AVR_UNO
-    long long currT = millis();
+    unsigned long currT = millis();
+    Serial.print("t:");
+    Serial.println(currT);
   #else
     long long currT = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
   #endif
