@@ -20,7 +20,6 @@ void setupBoard() {
 #endif
 }
 
-int i = 0;
 void displayMap() {
 #ifdef ARDUINO_AVR_UNO
   for (int y = 0; y < BOARD_H; ++y) {
@@ -29,28 +28,13 @@ void displayMap() {
       BoardElement elem = board[y][x];
       if (elem.type == BoardElement::Player) {
         Player* player = elem.value.as_player;
-        /*Serial.print("x:");
-        Serial.print(x);
-        Serial.print(",y:");
-        Serial.print(y);
-        Serial.print("rx:");
-        Serial.print(player->x);
-        Serial.print(",ry:");
-        Serial.print(player->y);
-        Serial.print(",id:");
-        Serial.println(player->id);*/
         leds[ind] = player->id == 0 ? CRGB(0, 0, 10) : player->id == 1 ? CRGB(10, 0, 0) : CRGB::Purple;
       } else {
         leds[ind] = CRGB::Black;
       }
     }
   }
-  /*leds[i] = CRGB::Black;
-  ++i;
-  i %= NUM_LEDS;
-  leds[i] = CRGB::Red;*/
   FastLED.show();
-  //delay(500);
 #else
   system("clear");
   for (int i = 0; i < BOARD_H; ++i) {

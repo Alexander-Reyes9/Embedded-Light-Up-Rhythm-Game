@@ -15,12 +15,7 @@ void loop() {
 #ifdef ARDUINO_AVR_UNO
   long yIn = (512 - analogRead(A0));
   long xIn = (512 - analogRead(A1));
-  /*Serial.print("x:");
-  Serial.print(xIn);
-  Serial.print(",y:");
-  Serial.print(yIn);
-  Serial.print(",l:");
-  Serial.println(xIn * xIn + yIn * yIn);*/
+  
   if ((xIn * xIn + yIn * yIn) > ((long)THRESHOLD * THRESHOLD)) {
     if (abs(xIn) > abs(yIn)) {
       players[0].move(xIn < 0 ? LEFT : RIGHT);
@@ -51,11 +46,6 @@ void loop() {
   else {
     cout << "invalid input" << endl;
   }
-  /*for (int i = 0; i < 2; ++i) {
-    cout << "Player " << i << endl;
-    cout << '\t' << players[i].x << endl;
-    cout << '\t' << players[i].y << endl;
-  }*/
 #endif
   displayMap();
 }
@@ -63,8 +53,6 @@ void loop() {
 
 void setup()
 {
-  //Serial.begin(9600);
-  //delay(1000);
   setupBoard();
   players = new Player[2]{0, 1};
 }
