@@ -2,9 +2,6 @@
 #ifndef ARDUINO_AVR_UNO
 #include <cstdlib>
 #include <iostream>
-#include <chrono>
-using namespace std;
-using namespace std::chrono;
 #else
 #include <Arduino.h>
 #endif
@@ -19,17 +16,12 @@ Player::Player(char id, InputMethod* im)
   y = getRandInt(BOARD_H);
   this->id = id;
   this->im = im;
-  board[y][x].type = BoardElement::Player;
-  board[y][x].value.as_player = this;
+  board[y][x].player = this;
 }
 
 bool Player::move(Direction dir, bool checkDelay) {
   if (checkDelay) {
-  #ifdef ARDUINO_AVR_UNO
-    unsigned long currT = millis();
-  #else
-    unsigned long long currT = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-  #endif
+    auto currT = getTime();
     if (currT < lastMoveTime + moveDelayMs) {
       return false;
     }
@@ -41,20 +33,31 @@ bool Player::move(Direction dir, bool checkDelay) {
   if (!inBounds(newX, newY)) {
     return false;
   }
-  if (board[newY][newX].type != BoardElement::Empty) {
-    if (board[newY][newX].type == BoardElement::Player) {
-      // if it's a player, we can try and push the player
-      if (!board[newY][newX].value.as_player->move(dir, false)) {
-        return false;
-      }
+  if (board[newY][newX].player != NULL) {
+    // if it's a player, we can try and push the player
+    if (!board[newY][newX].player->move(dir, false)) {
+      return false;
     }
   }
-  board[y][x].type = BoardElement::Empty;
+  board[y][x].player = NULL;
   x = newX;
   y = newY;
-  board[y][x].type = BoardElement::Player;
-  board[y][x].value.as_player = this;
+  board[y][x].player = this;
   return true;
+}
+
+void Player::activate() {
+  Note*& note = board[y][x].note;
+  if (note != NULL) {
+    auto t = NOTE_TIMES[note->id];
+    auto l = NOTE_LENGTHS[note->id];
+    if (currT > (t + l - LEEWAY_MS) && currT < (t + l + LEEWAY_MS)) {
+      score++; 
+    }
+    note = NULL;
+  } else {
+    // wall/barrier placing code if we wanna do that
+  }
 }
 
 void Player::processInput() {

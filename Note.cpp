@@ -9,33 +9,13 @@ void spawnNote(Player* players) {
     do {
       x = getRandInt(BOARD_W);
       y = getRandInt(BOARD_H);
-    } while (board[y][x].type != BoardElement::Empty);
-    board[y][x].type = BoardElement::Note;
-    board[y][x].value.as_note = note;
+    } while (board[y][x].player != NULL || board[y][x].note != NULL);
+    board[y][x].note = note;
   }
 }
-void clearNote() {
-  for (int y = 0; y < BOARD_H; ++y) {
-    for (int x = 0; x < BOARD_W; ++x) {
-      //if (board[y][x].type == BoardElement::Note) {
-        
-      //}
-    }
-  }
-}
-void checkNote(Player* players) {
+void checkNote(Player* players, unsigned long currT) {
   if (currentNote > (sizeof(NOTE_TIMES) / sizeof(NOTE_TIMES[0]))) {
     return;
-  }
-  #ifdef ARDUINO_AVR_UNO
-    unsigned long currT = millis();
-  #else
-    unsigned long long currT = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-  #endif
-  if (currentNote > 0) {
-    if (currT > NOTE_TIMES[currentNote - 1] + NOTE_LENGTHS[currentNote - 1]) {
-      clearNote();
-    }
   }
   if (currT > NOTE_TIMES[currentNote]) {
     spawnNote(players);

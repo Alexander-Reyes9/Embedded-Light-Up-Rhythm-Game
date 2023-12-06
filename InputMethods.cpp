@@ -16,6 +16,10 @@ void JoystickInput::handle(Player* player) {
       player->move(yIn < 0 ? DOWN : UP);
     }
   }
+  
+  if (!digitalRead(pinButton)) {
+    player->activate();
+  }
 }
 #else
 #include <iostream>
@@ -39,6 +43,9 @@ public:
     else if (input == 'l')
     {
       player->move(Direction::LEFT);
+    }
+    else if (input == 'x') {
+      player->activate();
     }
     else {
       cout << "invalid input" << endl;

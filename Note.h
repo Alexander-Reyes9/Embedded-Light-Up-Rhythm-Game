@@ -13,11 +13,11 @@ struct Note {
 
 // times in ms of when notes should start
 const unsigned long NOTE_TIMES[] = {
-  200, 700, 1200, 1700
+  1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 1000
 };
 const unsigned int NOTE_LENGTHS[] = {
-  300, 300, 300, 300
+  3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000
 };
 
-void checkNote(Player* players);
+void checkNote(Player* players, unsigned long currT);
 void clearNote();

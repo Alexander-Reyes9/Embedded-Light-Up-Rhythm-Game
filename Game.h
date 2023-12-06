@@ -10,13 +10,16 @@
 #include "ScoreDisplay.h"
 
 Player* players;
+unsigned long startT;
+unsigned long currT;
 
 void loop() {
+  currT = getTime() - startT;
 #ifdef ARDUINO_AVR_UNO
   for (int i = 0; i < NUM_PLAYERS; ++i) {
     players[i].processInput();
   }
-  checkNote(players);
+  checkNote(players, currT);
 #else
   int playerSelect;
   std::cin >> playerSelect;
@@ -24,7 +27,7 @@ void loop() {
     players[playerSelect].processInput();
   }
 #endif
-  displayMap();
+  displayMap(currT);
   displayScores(players);
 }
 #pragma endregion INPUT
@@ -51,4 +54,5 @@ void setup()
     {1, new ConsoleInput()}
   };
 #endif
+  startT = getTime();
 }

@@ -6,6 +6,7 @@ class Player {
   public:
     Player(char id, InputMethod* im);
     bool move(Direction dir, bool checkDelay=true);
+    void activate();
     void processInput();
     char id = 0;
     int x;
