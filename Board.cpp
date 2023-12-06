@@ -29,6 +29,10 @@ void displayMap() {
       if (elem.type == BoardElement::Player) {
         Player* player = elem.value.as_player;
         leds[ind] = player->id == 0 ? CRGB(0, 0, 10) : player->id == 1 ? CRGB(10, 0, 0) : CRGB::Purple;
+      } else if (elem.type == BoardElement::Note) {
+        Note* note = elem.value.as_note;
+        Player* player = note->owner;
+        leds[ind] = player->id == 0 ? CRGB(0, 0, 10) : player->id == 1 ? CRGB(10, 0, 0) : CRGB::Purple;
       } else {
         leds[ind] = CRGB::Black;
       }
