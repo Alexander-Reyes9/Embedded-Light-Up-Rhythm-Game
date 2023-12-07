@@ -9,4 +9,4 @@ struct BoardElement {
 extern BoardElement board[BOARD_H][BOARD_W];
 
 void setupBoard();
-void displayMap(unsigned long currT);
+void displayMap(Time currT);

@@ -20,7 +20,7 @@ void setupBoard() {
 #endif
 }
 
-void displayMap(unsigned long currT) {
+void displayMap(Time currT) {
 #ifdef ARDUINO_AVR_UNO
   for (int y = 0; y < BOARD_H; ++y) {
     for (int x = 0; x < BOARD_W; ++x) {
@@ -53,7 +53,7 @@ void displayMap(unsigned long currT) {
   }
   FastLED.show();
 #else
-  system("clear");
+  //system("clear");
   for (int i = 0; i < BOARD_H; ++i) {
     for (int j = 0; j < BOARD_W; ++j) {
       cout << (char)((board[i][j].player != NULL) ? (board[i][j].player->id + '0') : '-');

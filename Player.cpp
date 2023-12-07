@@ -1,6 +1,5 @@
 
 #ifndef ARDUINO_AVR_UNO
-#include <cstdlib>
 #include <iostream>
 #else
 #include <Arduino.h>
@@ -21,7 +20,7 @@ Player::Player(char id, InputMethod* im)
 
 bool Player::move(Direction dir, bool checkDelay) {
   if (checkDelay) {
-    auto currT = getTime();
+    Time currT = getTime();
     if (currT < lastMoveTime + moveDelayMs) {
       return false;
     }

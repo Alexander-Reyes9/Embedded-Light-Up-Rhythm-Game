@@ -5,7 +5,8 @@ class Player;
 
 class InputMethod {
 public:
-  virtual void handle(Player* player);
+  virtual void handle(Player* player)=0;
+  virtual ~InputMethod() { };
 };
 
 #ifdef ARDUINO_AVR_UNO

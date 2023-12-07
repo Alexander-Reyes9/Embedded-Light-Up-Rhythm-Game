@@ -44,9 +44,10 @@ void setupScoreDisplay()
 #endif
 }
 
-int previousDigitPin = 13;
+#ifdef ARDUINO_AVR_UNO
 void writeDigit(uint8_t digitPin, int value)
 {
+  static int previousDigitPin = 13;
   digitalWrite(previousDigitPin, HIGH);
   digitalWrite(latchPin, LOW);
   shiftOut(dataPin, clockPin, MSBFIRST, digit2segments[value]);
@@ -56,6 +57,7 @@ void writeDigit(uint8_t digitPin, int value)
   //delay(1);
   //digitalWrite(digitPin, HIGH);
 }
+#endif
 
 int i = 0;
 void displayScores(Player* players)
@@ -77,6 +79,6 @@ void displayScores(Player* players)
       break;
   }
 #else
-  std::cout << "0: " << players[0].score << "1: " << players[1].score << std::endl;
+  std::cout << "0: " << players[0].score << ", 1: " << players[1].score << std::endl;
 #endif
 }

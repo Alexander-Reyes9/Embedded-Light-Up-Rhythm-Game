@@ -10,8 +10,8 @@
 #include "ScoreDisplay.h"
 
 Player* players;
-unsigned long startT;
-unsigned long currT;
+Time startT;
+Time currT;
 
 void loop() {
   currT = getTime() - startT;
@@ -23,14 +23,17 @@ void loop() {
 #else
   int playerSelect;
   std::cin >> playerSelect;
-  if (playerSelect >= 0 && playerSelect < NUM_PLAYERS) {
-    players[playerSelect].processInput();
+  if (std::cin.good()) {
+    if (playerSelect >= 0 && playerSelect < NUM_PLAYERS) {
+      players[playerSelect].processInput();
+    }
+  } else {
+    std::cin.clear();
   }
 #endif
   displayMap(currT);
   displayScores(players);
 }
-#pragma endregion INPUT
 
 void setup()
 {

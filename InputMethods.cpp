@@ -23,33 +23,30 @@ void JoystickInput::handle(Player* player) {
 }
 #else
 #include <iostream>
-class ConsoleInput : InputMethod {
-public:
-  virtual override void handle(Player* player) {
-    char input;
-    cin >> input;
-    if (input == 'u')
-    {
-      player->move(Direction::UP);
-    }
-    else if (input == 'd')
-    {
-      player->move(Direction::DOWN);
-    }
-    else if (input == 'r')
-    {
-      player->move(Direction::RIGHT);
-    }
-    else if (input == 'l')
-    {
-      player->move(Direction::LEFT);
-    }
-    else if (input == 'x') {
-      player->activate();
-    }
-    else {
-      cout << "invalid input" << endl;
-    }
+void ConsoleInput::handle(Player* player) {
+  char input;
+  std::cin >> input;
+  if (input == 'u')
+  {
+    player->move(Direction::UP);
+  }
+  else if (input == 'd')
+  {
+    player->move(Direction::DOWN);
+  }
+  else if (input == 'r')
+  {
+    player->move(Direction::RIGHT);
+  }
+  else if (input == 'l')
+  {
+    player->move(Direction::LEFT);
+  }
+  else if (input == 'x') {
+    player->activate();
+  }
+  else {
+    std::cout << "invalid input" << std::endl;
   }
 }
 #endif
