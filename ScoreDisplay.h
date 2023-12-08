@@ -4,22 +4,34 @@ const int dataPin = 10;
 const int clockPin = 6;
 const int latchPin = 9;
 
-const uint8_t digit0Pin = 4;
-const uint8_t digit1Pin = 7;
-const uint8_t digit2Pin = 8;
-const uint8_t digit3Pin = 12;
+const uint8_t DIGIT_PINS[] = {2, 4, 7, 8};
+
+const int SEG_A = 1 << 0;
+const int SEG_B = 1 << 1;
+const int SEG_C = 1 << 2;
+const int SEG_D = 1 << 3;
+const int SEG_E = 1 << 4;
+const int SEG_F = 1 << 5;
+const int SEG_G = 1 << 6;
 
 int digit2segments[10] = {
-  0b00111111,
-  0b00000110,
-  0b01011011,
-  0b01001111,
-  0b01100110,
-  0b01101101,
-  0b01111101,
-  0b00000111,
-  0b01111111,
-  0b01101111
+  SEG_A | SEG_B | SEG_C | SEG_D | SEG_E | SEG_F,
+  SEG_B | SEG_C,
+  SEG_A | SEG_B | SEG_G | SEG_E | SEG_D,
+  SEG_A | SEG_B | SEG_G | SEG_C | SEG_D,
+  SEG_F | SEG_G | SEG_B | SEG_C,
+  SEG_A | SEG_F | SEG_G | SEG_C | SEG_D,
+  SEG_A | SEG_F | SEG_E | SEG_D | SEG_C | SEG_G,
+  SEG_A | SEG_B | SEG_C,
+  SEG_A | SEG_B | SEG_C | SEG_D | SEG_E | SEG_F | SEG_G,
+  SEG_A | SEG_B | SEG_C | SEG_F | SEG_G
+};
+
+int statussegments[4] = {
+  SEG_D,
+  digit2segments[5],
+  SEG_A | SEG_F | SEG_G | SEG_E | SEG_D,
+  SEG_F | SEG_E | SEG_D
 };
 #else
 #include <iostream>
@@ -33,24 +45,20 @@ void setupScoreDisplay()
   pinMode(dataPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
 
-  pinMode(digit0Pin, OUTPUT);
-  digitalWrite(digit0Pin, HIGH);
-  pinMode(digit1Pin, OUTPUT);
-  digitalWrite(digit1Pin, HIGH);
-  pinMode(digit2Pin, OUTPUT);
-  digitalWrite(digit2Pin, HIGH);
-  pinMode(digit3Pin, OUTPUT);
-  digitalWrite(digit3Pin, HIGH);
+  for (int i = 0; i < 4; ++i) {
+    pinMode(DIGIT_PINS[i], OUTPUT);
+    digitalWrite(DIGIT_PINS[i], HIGH);
+  }
 #endif
 }
 
 #ifdef ARDUINO_AVR_UNO
-void writeDigit(uint8_t digitPin, int value)
+void writeDigit(uint8_t digitPin, int bits)
 {
   static int previousDigitPin = 13;
   digitalWrite(previousDigitPin, HIGH);
   digitalWrite(latchPin, LOW);
-  shiftOut(dataPin, clockPin, MSBFIRST, digit2segments[value]);
+  shiftOut(dataPin, clockPin, MSBFIRST, bits);
   digitalWrite(latchPin, HIGH);
   digitalWrite(digitPin, LOW);
   previousDigitPin = digitPin;
@@ -66,16 +74,16 @@ void displayScores(Player* players)
   i = (i + 1) % 4;
   switch(i) {
     case 0:
-      writeDigit(digit0Pin, players[1].score / 10);
+      writeDigit(DIGIT_PINS[0], digit2segments[players[1].score / 10]);
       break;
     case 1:
-      writeDigit(digit1Pin, players[1].score % 10);
+      writeDigit(DIGIT_PINS[1], digit2segments[players[1].score % 10]);
       break;
     case 2:
-      writeDigit(digit2Pin, players[0].score / 10);
+      writeDigit(DIGIT_PINS[2], digit2segments[players[0].score / 10]);
       break;
     case 3:
-      writeDigit(digit3Pin, players[0].score % 10);
+      writeDigit(DIGIT_PINS[3], digit2segments[players[0].score % 10]);
       break;
   }
 #else

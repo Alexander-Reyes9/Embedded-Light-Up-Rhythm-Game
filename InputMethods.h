@@ -12,12 +12,14 @@ public:
 #ifdef ARDUINO_AVR_UNO
 class JoystickInput : public InputMethod {
 public:
-  JoystickInput(int pinX, int pinY, int pinButton) : pinX(pinX), pinY(pinY), pinButton(pinButton) { }
+  JoystickInput(int pinX, int pinY, int pinButton, int xMult=1, int yMult=1) : pinX(pinX), pinY(pinY), pinButton(pinButton), xMult(xMult), yMult(yMult) { }
   virtual void handle(Player* player) override;
 private:
   int pinX;
   int pinY;
   int pinButton;
+  int xMult;
+  int yMult;
 };
 #else
 class ConsoleInput : public InputMethod {

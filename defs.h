@@ -1,6 +1,6 @@
 #pragma once
-#define BOARD_W 8
-#define BOARD_H 8
+#define BOARD_W 4
+#define BOARD_H 4
 #define NUM_PLAYERS 2
 
 #define LEEWAY_MS 200
@@ -24,4 +24,4 @@ struct Point {
 };
 const Point MOVE_VECS[] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-extern Time currT;
+extern Time startT, currT;

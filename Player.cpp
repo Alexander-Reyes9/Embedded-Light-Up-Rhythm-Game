@@ -3,6 +3,7 @@
 #include <iostream>
 #else
 #include <Arduino.h>
+#include "MP3.h"
 #endif
 #include "Board.h"
 
@@ -46,10 +47,16 @@ bool Player::move(Direction dir, bool checkDelay) {
 }
 
 void Player::activate() {
+  if (startT == 0) {
+    startT = getTime();
+    songNum = x;
+    mp3_command(CMD_PLAY, songNum);
+    return;
+  }
   Note*& note = board[y][x].note;
   if (note != NULL) {
-    auto t = NOTE_TIMES[note->id];
-    auto l = NOTE_LENGTHS[note->id];
+    auto t = NOTE_TIMES[songNum][note->id];
+    auto l = 1000;//NOTE_LENGTHS[songNum][note->id];
     if (currT > (t + l - LEEWAY_MS) && currT < (t + l + LEEWAY_MS)) {
       score++; 
     }

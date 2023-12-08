@@ -10,7 +10,7 @@
 #include "ScoreDisplay.h"
 
 Player* players;
-Time startT;
+Time startT = 0;
 Time currT;
 
 void loop() {
@@ -19,7 +19,9 @@ void loop() {
   for (int i = 0; i < NUM_PLAYERS; ++i) {
     players[i].processInput();
   }
-  checkNote(players, currT);
+  if (startT != 0) {
+    checkNote(players, currT);
+  }
 #else
   int playerSelect;
   std::cin >> playerSelect;
@@ -32,7 +34,14 @@ void loop() {
   }
 #endif
   displayMap(currT);
-  displayScores(players);
+  
+  if (startT == 0) {
+    static int i = 0;
+    i = (i+1) % 4;
+    writeDigit(DIGIT_PINS[i], statussegments[i]);
+  } else {
+    displayScores(players);
+  }
 }
 
 void setup()
@@ -45,7 +54,6 @@ void setup()
   delay(500);  // wait chip initialization is complete
   mp3_command(CMD_SEL_DEV, DEV_TF);  // select the TF card
   delay(500);
-  mp3_command(CMD_PLAY, 0x0001);
 
   players = new Player[2] {
     {0, new JoystickInput(A1, A0, A2)},
@@ -56,6 +64,6 @@ void setup()
     {0, new ConsoleInput()},
     {1, new ConsoleInput()}
   };
+  startT = getTime(); // just start immediately since no audio playing on command line
 #endif
-  startT = getTime();
 }

@@ -3,7 +3,7 @@
 BoardElement board[BOARD_H][BOARD_W] = {{{}}};
 
 #ifdef ARDUINO_AVR_UNO
-#define NUM_LEDS BOARD_W * BOARD_H
+#define NUM_LEDS 64
 #define LEDS_DATA_PIN 3
 #include <Arduino.h>
 #include <FastLED.h>
@@ -22,14 +22,16 @@ void setupBoard() {
 
 void displayMap(Time currT) {
 #ifdef ARDUINO_AVR_UNO
-  for (int y = 0; y < BOARD_H; ++y) {
-    for (int x = 0; x < BOARD_W; ++x) {
-      int ind = y * BOARD_W + ((y % 2 == 0) ? (BOARD_W - 1 - x) : x); // goes right to left on even index rows
+  for (int by = 0; by < BOARD_H*2; ++by) {
+    for (int bx = 0; bx < BOARD_W*2; ++bx) {
+      int ind = by * 8 + ((by % 2 == 0) ? (8 - 1 - bx) : bx); // goes right to left on even index rows
+      int y = by / 2;
+      int x = bx / 2;
       BoardElement& elem = board[y][x];
       if (elem.note != NULL) {
         Note* note = elem.note;
-        auto t = NOTE_TIMES[note->id];
-        auto l = NOTE_LENGTHS[note->id];
+        auto t = NOTE_TIMES[songNum][note->id];
+        auto l = 1000;//NOTE_LENGTHS[songNum][note->id];
 
         long relativeToEndT = (long)t + l - currT;
         if (relativeToEndT < 0) {

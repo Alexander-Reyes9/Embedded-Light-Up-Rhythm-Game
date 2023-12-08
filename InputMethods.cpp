@@ -6,8 +6,8 @@
 
 #define THRESHOLD 256
 void JoystickInput::handle(Player* player) {
-  long xIn = (512 - analogRead(pinX));
-  long yIn = (512 - analogRead(pinY));
+  long xIn = (512 - analogRead(pinX)) * xMult;
+  long yIn = (512 - analogRead(pinY)) * yMult;
   
   if ((xIn * xIn + yIn * yIn) > ((long)THRESHOLD * THRESHOLD)) {
     if (abs(xIn) > abs(yIn)) {
